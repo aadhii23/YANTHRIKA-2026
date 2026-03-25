@@ -1,0 +1,189 @@
+/* ================================================================
+   SCHEDULE PAGE — Cinematic expandable timeline
+   ================================================================ */
+
+.sched-page { padding: 80px 0 120px; }
+
+/* Top header */
+.sched-top {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  flex-wrap: wrap; gap: 24px; margin-bottom: 48px;
+}
+.sched-overline {
+  font-family: var(--font-display); font-size: 10px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--main-color); display: block; margin-bottom: 8px;
+}
+.sched-title {
+  font-family: var(--font-display); font-size: clamp(28px,3.5vw,48px);
+  font-weight: 800; color: #fff;
+}
+.sched-tabs { display: flex; gap: 4px; }
+.sched-tab {
+  display: flex; flex-direction: column; gap: 3px; padding: 13px 26px;
+  border: 1px solid rgba(255,255,255,0.1); background: transparent;
+  cursor: pointer; text-align: left; transition: all 0.25s ease;
+}
+.sched-tab:hover { border-color: rgba(255,30,30,0.3); background: rgba(255,30,30,0.05); }
+.sched-tab--on { background: var(--main-color); border-color: var(--main-color); }
+.sched-tab strong { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
+.sched-tab span { font-family: var(--font-display); font-size: 10px; color: rgba(255,255,255,0.5); }
+.sched-tab--on span { color: rgba(255,255,255,0.75); }
+
+/* Day banner */
+.sched-banner {
+  display: flex; align-items: center; gap: 32px;
+  padding: 36px 0; margin-bottom: 56px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: relative; overflow: hidden;
+}
+.sched-banner__date {
+  font-family: var(--font-heading); font-size: clamp(72px,12vw,130px);
+  color: var(--main-color); opacity: 0.12; line-height: 1em;
+  pointer-events: none; position: absolute; right: 0; top: 50%;
+  transform: translateY(-50%);
+  transition: opacity 0.4s ease;
+}
+.sched-banner:hover .sched-banner__date { opacity: 0.22; }
+.sched-banner__info { position: relative; z-index: 1; }
+.sched-banner__month { font-family: var(--font-display); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.3); display: block; margin-bottom: 4px; }
+.sched-banner__info h3 { font-family: var(--font-heading); font-size: clamp(30px,4vw,54px); color: #fff; }
+.sched-banner__count { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--main-color); display: block; margin-top: 4px; }
+.sched-banner__rule { flex: 1; height: 1px; background: linear-gradient(to right, rgba(255,30,30,0.4), transparent); }
+
+/* Timeline */
+.sched-timeline { display: flex; flex-direction: column; gap: 0; }
+.sched-timeline--out { opacity: 0; transform: translateX(-12px); transition: opacity 0.3s ease, transform 0.3s ease; }
+
+/* Slot card */
+.slot-card {
+  display: grid; grid-template-columns: 100px 24px 1fr; gap: 0 20px;
+  align-items: start; cursor: pointer;
+  opacity: 0; transform: translateX(-20px);
+  transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+  transition-delay: var(--slot-delay);
+}
+.slot-card.slot-visible { opacity: 1; transform: none; }
+
+/* Time */
+.slot-time { padding-top: 18px; text-align: right; }
+.slot-time__text { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.06em; color: rgba(255,255,255,0.3); font-weight: 500; display: block; }
+.slot-time__line { display: none; }
+
+/* Dot + vertical connector */
+.slot-dot {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; padding-top: 18px;
+}
+.slot-dot::before {
+  content: ''; position: absolute; top: 0; bottom: -4px;
+  left: 50%; transform: translateX(-50%); width: 1px;
+  background: rgba(255,255,255,0.07); z-index: 0;
+}
+.slot-card:first-child .slot-dot::before { top: 26px; }
+.slot-card:last-child .slot-dot::before { bottom: 50%; }
+.slot-dot__ring {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--slot-color);
+  background: transparent; z-index: 1; flex-shrink: 0;
+  transition: transform 0.35s var(--ease-spring), box-shadow 0.35s ease, background 0.25s ease;
+}
+.slot-dot__core {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--slot-color);
+  position: absolute; top: calc(18px + 4px);
+  transition: transform 0.35s var(--ease-spring);
+}
+.slot-card:hover .slot-dot__ring,
+.slot-card.slot-active .slot-dot__ring {
+  transform: scale(1.5);
+  box-shadow: 0 0 14px var(--slot-color);
+  background: color-mix(in srgb, var(--slot-color) 15%, transparent);
+}
+
+/* Body */
+.slot-body {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+  border-left: 2px solid rgba(255,255,255,0.07);
+  margin: 4px 0 8px; overflow: hidden;
+  transition: background 0.3s ease, border-left-color 0.3s ease, transform 0.35s var(--ease-out), box-shadow 0.35s ease;
+}
+.slot-card:hover .slot-body,
+.slot-card.slot-active .slot-body {
+  background: var(--slot-bg);
+  border-left-color: var(--slot-color);
+  transform: translateX(6px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+.slot-header {
+  display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+  position: relative; overflow: hidden;
+}
+/* Shimmer sweep */
+.slot-header::after {
+  content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+  transition: left 0.5s ease;
+}
+.slot-card:hover .slot-header::after { left: 150%; }
+
+.slot-icon { font-size: 22px; flex-shrink: 0; }
+.slot-info { flex: 1; }
+.slot-label { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 3px; letter-spacing: 0.01em; }
+.slot-type { font-family: var(--font-display); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--slot-color); font-weight: 600; }
+.slot-arrow {
+  font-size: 20px; color: var(--slot-color); opacity: 0;
+  transform: translateX(-6px) rotate(0deg);
+  transition: opacity 0.25s ease, transform 0.35s var(--ease-out);
+  flex-shrink: 0;
+}
+.slot-card:hover .slot-arrow { opacity: 1; transform: translateX(0); }
+.slot-card.slot-active .slot-arrow { opacity: 1; transform: translateX(0) rotate(90deg); }
+
+/* Expandable description */
+.slot-desc {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s var(--ease-out), padding 0.3s ease;
+  padding: 0 20px;
+}
+.slot-card.slot-active .slot-desc {
+  max-height: 80px;
+  padding: 0 20px 16px;
+}
+.slot-desc p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; }
+
+/* Legend */
+.sched-legend {
+  display: flex; flex-wrap: wrap; gap: 20px;
+  margin-top: 56px; padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.legend-item {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display); font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4);
+}
+.legend-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--lc); flex-shrink: 0;
+  box-shadow: 0 0 6px var(--lc);
+}
+
+@media (max-width: 600px) {
+  .slot-card { grid-template-columns: 70px 18px 1fr; gap: 0 10px; }
+  .sched-tabs { flex-direction: column; width: 100%; }
+  .sched-top { flex-direction: column; align-items: flex-start; }
+}
+
+/* ── Mobile schedule polish ── */
+@media (max-width: 480px) {
+  .sched-page { padding: 60px 0 80px; }
+  .sched-banner { gap: 16px; padding: 24px 0; margin-bottom: 32px; }
+  .sched-tab { padding: 11px 16px; }
+  .sched-tab strong { font-size: 12px; }
+  .slot-card { grid-template-columns: 56px 14px 1fr; gap: 0 8px; }
+  .slot-header { padding: 12px 14px; gap: 10px; }
+  .slot-label { font-size: 13px; }
+  .slot-icon { font-size: 18px; }
+  .sched-legend { gap: 12px; margin-top: 36px; }
+}
