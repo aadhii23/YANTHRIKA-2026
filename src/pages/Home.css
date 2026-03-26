@@ -759,11 +759,24 @@ p { color: rgba(255,255,255,0.52); font-size: 15px; line-height: 1.85em; margin-
 }
 .hero-btns {
   display: flex;
-  gap: 14px;
+  gap: clamp(12px, 2vw, 16px);
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 0;
+}
+
+/* Laptop button optimization */
+@media (max-width: 1366px) and (min-width: 769px) {
+  .hero-btns {
+    gap: 12px;
+  }
+  .hero-btns .btn-mag {
+    font-size: 12px;
+  }
+  .btn-inner {
+    padding: 14px 32px;
+  }
 }
 
 /* Scroll indicator */
@@ -1164,6 +1177,23 @@ p { color: rgba(255,255,255,0.52); font-size: 15px; line-height: 1.85em; margin-
 .app-shell:not(.app-shell--ready) .hero-model-wrap {
   opacity: 0;
   pointer-events: none;
+}
+
+@media (max-width: 1366px) {
+  .hero-model-wrap {
+    top: calc(50% + 70px);
+    right: -1%;
+    width: min(48vw, 680px);
+    height: min(48vw, 680px);
+    min-width: 360px;
+  }
+  .hero-body {
+    padding-left: clamp(24px, 5vw, 85px) !important;
+    max-width: min(52%, 620px);
+  }
+  .hero-title {
+    font-size: clamp(68px, 11vw, 140px);
+  }
 }
 
 @media (max-width: 1200px) {

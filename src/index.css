@@ -69,7 +69,15 @@ img {
 .auto-container {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 30px;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* Laptop-specific container refinement */
+@media (max-width: 1366px) and (min-width: 1025px) {
+  .auto-container {
+    padding: 0 28px;
+    max-width: 1180px;
+  }
 }
 
 /* ── Typography ── */

@@ -8,13 +8,24 @@ export default function Navbar() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const onScroll = () => setFixed(window.scrollY > 80);
+    const onScroll = () => { 
+      const isFixed = window.scrollY > 80;
+      setFixed(isFixed);
+      if (isFixed) {
+        document.body.classList.add('has-fixed-header');
+      } else {
+        document.body.classList.remove('has-fixed-header');
+      }
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => { setMobileOpen(false); }, [pathname]);
-  useEffect(() => { document.body.style.overflow = mobileOpen ? 'hidden' : ''; }, [mobileOpen]);
+useEffect(() => { 
+  document.body.classList.toggle('mobile-menu-open', mobileOpen);
+  document.body.style.overflow = mobileOpen ? 'hidden' : ''; 
+}, [mobileOpen]);
 
   const isEventsActive = pathname.startsWith('/events');
 

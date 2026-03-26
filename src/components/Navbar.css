@@ -16,6 +16,24 @@
 .logo { display: block; padding: 4px 0; width: 110px; }
 .logo img { width: 100%; height: auto; display: block; }
 
+@media (max-width: 1366px) and (min-width: 1024px) {
+  .navigation > li {
+    margin-right: 6px;
+    padding-left: 36px;
+  }
+  .navigation > li > a {
+    font-size: 13px !important;
+    padding: 16px 0;
+    letter-spacing: 0.12em;
+  }
+  .logo {
+    width: 100px;
+  }
+  .main-header {
+    padding: 18px 0 26px;
+  }
+}
+
 @media (max-width: 1023px) {
   .main-header {
     padding: 16px 0;
@@ -143,16 +161,16 @@
   .nav-outer { display: none; }
   .mobile-nav-toggler { display: block; }
   
-  /* Compact tablet */
+/* Compact tablet (1200-1366px) */
   .navigation > li > a {
-    font-size: 11px !important;
+    font-size: 12px !important;
     padding: 16px 0;
-    margin-right: 4px;
+    margin-right: 5px;
   }
   
   .navigation > li {
-    padding-left: 32px;
-    margin-right: 4px;
+    padding-left: 34px;
+    margin-right: 5px;
   }
   
   /* Dropdown hover fix for touch */
@@ -216,6 +234,11 @@
 
 /* Prevent header from overlapping content */
 .main-header.fixed-header .header-lower {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+/* Prevent overlap with hero content */
+body.has-fixed-header .hero {
+  padding-top: 120px;
 }
