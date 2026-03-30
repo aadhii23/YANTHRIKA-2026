@@ -242,7 +242,7 @@ export const ALL_EVENTS = [
       'Pitch must be 5- 7 minutes long, followed by a 3-minute Q&A session',
       'Presentations can include slides, prototypes, videos, or other visual aids',
       'The pitch must be delivered in English',
-      'The idea can be tech-related or non-tech -  must be original with a clear problem statement, solution, business model, and duplicate impact',
+      'The idea can be tech-related or non-tech - must be original with a clear problem statement, solution, business model, and market impact',
       'Any offensive content will result in disqualification',
       'Judges\' decisions are final; time limits must be strictly adhered to',
     ],
@@ -250,8 +250,7 @@ export const ALL_EVENTS = [
   {
     slug: 'brainy-bunch',
     formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeRXCOqnJjUJUsLKaFQ3OEhjAa4s9k5t14mNWA7n8CWv00AbQ/viewform',
-    duration: 'Day 1 -  10:00 AM',
-    rounds: 'Multi-stage Hunt',
+    duration: 'Day 1 - 10:00 AM',\n    rounds: 'Multi-stage Hunt',
     venue: 'Campus Wide',
     prize: 'Exciting Prizes',
     image: '/images/gallery/1.webp',
