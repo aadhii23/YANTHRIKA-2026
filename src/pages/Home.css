@@ -325,7 +325,7 @@ p { color: rgba(255,255,255,0.52); font-size: 15px; line-height: 1.85em; margin-
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 13px; font-weight: 700;
+  font-size: clamp(13px, 2.2vw, 14px); font-weight: 700;
   letter-spacing: 0.14em; text-transform: uppercase;
   padding: 0;
   position: relative; overflow: hidden;
@@ -1177,6 +1177,34 @@ p { color: rgba(255,255,255,0.52); font-size: 15px; line-height: 1.85em; margin-
 .app-shell:not(.app-shell--ready) .hero-model-wrap {
   opacity: 0;
   pointer-events: none;
+}
+
+@media (max-width: 1366px) and (min-width: 1281px) {
+  .hero-model-wrap {
+    top: calc(50% + 72px);
+    right: 0 !important;
+    width: min(46vw, 650px);
+    height: min(46vw, 650px);
+    min-width: 320px;
+  }
+  .hero-body {
+    padding-left: clamp(28px, 4.2vw, 72px) !important;
+    max-width: 50% !important;
+    padding-right: 20px;
+  }
+  .hero-title {
+    font-size: clamp(64px, 10.5vw, 132px);
+  }
+  .hero-btns {
+    flex-direction: column !important;
+    gap: 12px;
+    align-items: flex-start;
+    max-width: 380px;
+  }
+  .btn-mag {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 1366px) {

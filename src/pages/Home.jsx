@@ -294,7 +294,7 @@ export default function Home() {
                 <span className="btn-arrow">→</span>
               </span>
             </MagLink>
-            <a href="/brochures/yanthrika-brochure.pdf" download className="btn-mag btn-mag--ghost">
+            <a href="sha256:d7354b8dc5a0f2d6707a23939fe32424ea1638356ac5aec52882ef3a60dc0be9" download className="btn-mag btn-mag--ghost">
               <span className="btn-inner">
                 <span className="btn-label">Download Brochure</span>
                 <span className="btn-arrow">↓</span>

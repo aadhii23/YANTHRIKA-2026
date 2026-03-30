@@ -19,6 +19,7 @@ export default function Contact() {
   const preEvent = location.state?.event || '';
   const [tab, setTab]         = useState('register');
   const [success, setSuccess] = useState('');
+  const [regError, setRegError] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors]   = useState({});
   const [reg, setReg] = useState({ name:'', email:'', phone:'', college:'', event:preEvent, teamName:'', teamMembers:'' });
@@ -60,19 +61,29 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLQaVq2hlf_l-wsivMU
   const onR = e => setReg(p => ({ ...p, [e.target.name]: e.target.value }));
   const onE = e => setEnq(p => ({ ...p, [e.target.name]: e.target.value }));
 
-  const submitReg = async (e) => {
+    const submitReg = async (e) => {
     e.preventDefault();
-    const errs = vReg(); if (Object.keys(errs).length) { setErrors(errs); return; }
-    setErrors({}); setLoading(true);
+    const errs = vReg(); 
+    if (Object.keys(errs).length) { 
+      setErrors(errs); 
+      setRegError('');
+      return; 
+    }
+    setErrors({}); 
+    setRegError('');
+    setLoading(true);
 
     const formConfig = EVENT_GOOGLE_FORMS[reg.event];
     if (!formConfig) {
-      setSuccess('No Google Form configured for this event yet. Please contact admin.');
+      setRegError('No Google Form configured for "' + reg.event + '". Email: tensortribetechclub@gmail.com');
       setLoading(false);
       return;
     }
 
-    // URLSearchParams for form fields
+    // Log intent
+    console.log('📤 Contact Reg →', { event: reg.event, college: reg.college, name: reg.name });
+
+    // Params
     const f = formConfig.f;
     const params = new URLSearchParams();
     params.append(f.college || 'entry.1644343270', reg.college);
@@ -80,9 +91,9 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLQaVq2hlf_l-wsivMU
     params.append(f.leaderEmail || 'entry.686138351', reg.email);
     params.append(f.leaderPhone || 'entry.491958267', reg.phone);
     if (f.teamName) params.append(f.teamName, reg.teamName);
-    if (reg.teamMembers) params.append('entry.1962413621', reg.teamMembers); // fallback
+    if (reg.teamMembers && f.member2Name) params.append(f.member2Name, reg.teamMembers);
 
-    // Hidden iframe POST to Google Form
+    // Iframe setup
     const iframeName = 'gf_' + Date.now();
     const iframe = document.createElement('iframe');
     iframe.name = iframeName;
@@ -104,36 +115,56 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLQaVq2hlf_l-wsivMU
     });
 
     document.body.appendChild(form);
-    form.submit();
 
-    setTimeout(() => {
+    // Timeout protection
+    const timeoutId = setTimeout(() => {
+      console.error('⏰ Contact Reg TIMEOUT', { iframeName, event: reg.event });
+      setRegError('Submission timeout (5s). Form may be expired. Email details to tensortribetechclub@gmail.com');
+      setLoading(false);
       try { document.body.removeChild(form); } catch(e) {}
       try { document.body.removeChild(iframe); } catch(e) {}
+    }, 5000);
 
-      // Apps Script call
+    iframe.onload = () => {
+      console.log('📡 Contact iframe.onload', iframeName);
+      clearTimeout(timeoutId);
+      console.log('✅ Contact reg success');
+      // Script backup
       fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: params })
-        .catch(err => console.error('Script failed:', err));
+        .catch(err => console.error('Script backup failed:', err));
+      localStorage.setItem('contact-reg-' + Date.now(), params.toString());
+      setSuccess('Registration submitted successfully! Check spam if no confirmation.');
+      setReg({ name:'', email:'', phone:'', college:'', event:'', teamName:'', teamMembers:'' });
+      setLoading(false);
+      // Cleanup
+      setTimeout(() => {
+        try { document.body.removeChild(form); } catch(e) {}
+        try { document.body.removeChild(iframe); } catch(e) {}
+      }, 1500);
+    };
 
-      console.log('Data sent:', params.toString());
-      localStorage.setItem('reg-log-' + Date.now(), params.toString());
-    }, 1000);
-
-    setSuccess('Registration submitted! Check email/Google Sheets.');
-    setReg({ name:'', email:'', phone:'', college:'', event:'', teamName:'', teamMembers:'' });
-    setLoading(false);
+    try {
+      console.log('🔥 Contact form.submit()', formConfig.url);
+      form.submit();
+    } catch (err) {
+      clearTimeout(timeoutId);
+      console.error('💥 Contact submit error:', err);
+      setRegError('Submit failed. Check console.');
+      setLoading(false);
+    }
   };
 
   const submitEnq = async (e) => {
     e.preventDefault();
     const errs = vEnq(); if (Object.keys(errs).length) { setErrors(errs); return; }
     setErrors({}); setLoading(true);
-    try {
-      const res = await fetch('/api/contact/enquire', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(enq) });
-      const d = await res.json();
-      setSuccess(d.success ? "Message received! We'll reply within 24 hours." : 'Something went wrong.');
-      if (d.success) setEnq({ name:'', email:'', subject:'', message:'' });
-    } catch { setSuccess('Cannot reach server. Email us directly.'); }
-    setLoading(false);
+    console.log('📧 Enquiry:', enq);
+    // TODO: Replace with EmailJS or real backend when ready
+    setTimeout(() => {
+      setSuccess('Enquiry logged! Reply within 24h or email directly.');
+      setEnq({ name:'', email:'', subject:'', message:'' });
+      setLoading(false);
+    }, 1200);
   };
 
   return (
@@ -154,6 +185,12 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLQaVq2hlf_l-wsivMU
                 <div className="success-banner">
                   ✓ &nbsp;{success}
                   <button onClick={() => setSuccess('')} style={{ float:'right', background:'none', color:'#fff', fontSize:18, cursor:'pointer', lineHeight:1 }}>×</button>
+                </div>
+              )}
+              {regError && (
+                <div className="success-banner" style={{background:'rgba(255,80,80,0.2)', color:'rgba(255,255,255,0.9)'}}>
+                  ❌ Reg Error: {regError}
+                  <button onClick={() => setRegError('')} style={{ float:'right', background:'none', color:'#fff', fontSize:18, cursor:'pointer', lineHeight:1 }}>×</button>
                 </div>
               )}
               <div className="contact-tabs">

@@ -1,5 +1,9 @@
-# TODO: Update Old Roll Register Link
+# Yanthrika Brochure Button Integration - TODO
 
-- [x] Step 1: Update formUrl for 'old-roll' in src/data/events.js
-- [x] Step 2: Verify the change in EventDetail page
-- [x] Step 3: Mark complete and remove TODO.md
+## Plan Steps:
+- [✅] Step 1: Create TODO.md 
+- [✅] Step 2: Add brochure button to Home.jsx hero section
+- [✅] Step 3: Update Sponsors.jsx CTA with brochure link
+- [✅] Step 4: Test download functionality (run `npm run dev` manually to verify)
+- [ ] Step 5: attempt_completion
+

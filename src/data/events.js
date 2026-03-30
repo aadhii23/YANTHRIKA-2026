@@ -230,9 +230,6 @@ export const ALL_EVENTS = [
     name: 'Venture Verse',
     category: 'Non-Technical',
     subtitle: 'STARTUP PITCH',
-    teamSize: ' 
-   
-Team of 3',
     teamSize: 'Team of 3',
     duration: 'Day 2 -  2:00 PM',
     rounds: 'Pitch + Q&A',
@@ -252,18 +249,16 @@ Team of 3',
   },
   {
     slug: 'brainy-bunch',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeRXCOqnJjUJUsLKaFQ3OEhjAa4s9k5t 
-   
-Team of 3',
+    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeRXCOqnJjUJUsLKaFQ3OEhjAa4s9k5t14mNWA7n8CWv00AbQ/viewform',
     duration: 'Day 1 -  10:00 AM',
     rounds: 'Multi-stage Hunt',
     venue: 'Campus Wide',
     prize: 'Exciting Prizes',
     image: '/images/gallery/1.webp',
-    description: 'Teams will navigate through a series of cryptic clues, riddles, and duplicate challenges scattered across campus, duplicate problem-solving skills to decipher the path and ultimately uncover the hidden "Treasure".',
+    description: 'Teams will navigate through a series of cryptic clues, riddles, and challenging tasks scattered across campus. Use problem-solving skills to decipher the path and ultimately uncover the hidden "Treasure".',
     rules: [ 
       'Teams of 4 members',
-      'Each clue leads to a venture, event, or person -  pay attention to codes and riddle',
+      'Each clue leads to a venue, event, or person - pay attention to codes and riddles',
       'Handle property carefully; damage will result in strict action',
       'The Incharge\'s decision is final for all disputes or clarifications',
       'Sharing passwords or clues leads to immediate disqualification',

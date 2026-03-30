@@ -183,7 +183,9 @@ export default function RegisterEvent() {
     return errs;
   };
 
-  /* ── Submit (Rebuilt with native iframe proxy to bypass CORS) ── */
+  /* ── Submit with DEBUGGING & TIMEOUT ── */
+  const [errorMsg, setErrorMsg] = useState('');
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
@@ -259,37 +261,55 @@ export default function RegisterEvent() {
 
     document.body.appendChild(form);
 
-    // Track submission state to avoid firing on initial empty iframe load
+    // Track submission state + TIMEOUT for reliability
     let isSubmitted = false;
+    const submitTimeout = setTimeout(() => {
+      console.error('🚨 Google Form submission TIMEOUT after 5s', { slug, iframeName });
+      setLoading(false);
+      alert('Submission timeout. Form may be expired. Email tensortribetechclub@gmail.com with your details.');
+      // Cleanup
+      try { document.body.removeChild(form); } catch(e) {}
+      try { document.body.removeChild(iframe); } catch(e) {}
+    }, 5000);
 
-    // Listen for the iframe loading Google's response page
+    // Listen for iframe response
+    const origOnload = iframe.onload;
     iframe.onload = () => {
-      if (!isSubmitted) return; // Ignore the very first time the empty iframe loads
-
+      console.log('📡 iframe.onload fired', { isSubmitted, iframeName });
+      if (!isSubmitted) { 
+        console.log('⏭️ Initial iframe load ignored');
+        return origOnload?.(); 
+      }
+      clearTimeout(submitTimeout);
+      console.log('✅ Google Form response received');
       setLoading(false);
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Clean up the DOM to prevent memory leaks
+      // Cleanup
       setTimeout(() => {
-        try { document.body.removeChild(form); } catch(e) {}
-        try { document.body.removeChild(iframe); } catch(e) {}
+        try { document.body.removeChild(form); } catch(e) { console.warn('Cleanup form failed:', e); }
+        try { document.body.removeChild(iframe); } catch(e) { console.warn('Cleanup iframe failed:', e); }
       }, 2000);
     };
 
-    // Execute the POST request
+    // Form data log for debugging
+    console.log('📤 Submitting to Google Form:', {
+      event: slug,
+      url: config.url,
+      fields: Object.keys(config.f).length,
+      college, leader: leader.name, email: leader.email
+    });
+
+    // Execute POST
     try {
+      console.log('🔥 form.submit()');
       isSubmitted = true;
       form.submit();
-      
-      // Secondary backup: POST to App Script if you still use it for emails
-      if (config.scriptUrl) {
-        const formData = new FormData(form);
-        fetch(config.scriptUrl, { method: 'POST', mode: 'no-cors', body: formData }).catch(()=>{});
-      }
     } catch (error) {
+      clearTimeout(submitTimeout);
+      console.error('💥 Submit error:', error);
       setLoading(false);
-      alert('Network error. Please try again.');
+      alert('Submit failed. Check console and try again.');
     }
   };
 
@@ -368,6 +388,11 @@ export default function RegisterEvent() {
               {Object.keys(errors).length > 0 && (
                 <div className="reg-error-banner">
                   ⚠ &nbsp;Please fill all required fields before submitting.
+                </div>
+              )}
+              {errorMsg && (
+                <div className="reg-error-banner" style={{background:'rgba(255,50,50,0.15)'}}>
+                  ❌ {errorMsg}
                 </div>
               )}
 

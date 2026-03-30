@@ -211,12 +211,12 @@ export default function Sponsors() {
             <h2>Ready to Partner?</h2>
             <p>Download our sponsorship brochure or reach us directly.</p>
             <div className="sponsors-cta-btns">
-              <Link to="/contact" className="btn-style-one">
+              <a href="sha256:d7354b8dc5a0f2d6707a23939fe32424ea1638356ac5aec52882ef3a60dc0be9" download className="btn-style-one">
                 <div className="btn-wrap">
-                  <span className="text-one">Get Brochure</span>
-                  <span className="text-two">Get Brochure</span>
+                  <span className="text-one">Download Brochure</span>
+                  <span className="text-two">Download Brochure</span>
                 </div>
-              </Link>
+              </a>
               <a href="mailto:tensortribetechclub@gmail.com" className="btn-style-two">
                 <div className="btn-wrap">
                   <span className="text-one">Email Us</span>
