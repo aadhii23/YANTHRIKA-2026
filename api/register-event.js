@@ -138,17 +138,22 @@ function isSnpsu(collegeName) {
     if (isSnpsu(college_name)) {
       const limit = getSnpsuLimit(event_name);
       if (limit !== null) {
-        const { count, error: countError } = await supabase
-          .from('event_registrations')
-          .select('*', { count: 'exact', head: true })
-          .eq('event_name', event_name)
-          .ilike('college_name', '%sapthagiri%');
+        try {
+          const { count, error: countError } = await supabase
+            .from('event_registrations')
+            .select('*', { count: 'exact', head: true })
+            .eq('event_name', event_name)
+            .or('college_name.ilike.%sapthagiri%,college_name.ilike.%snpsu%');
 
-        if (!countError && count >= limit) {
-          return res.status(400).json({
-            success: false,
-            message: `Registrations for Sapthagiri NPS University are full for ${event_name}. We have reached our internal quota for this event. Thank you for your interest!`,
-          });
+          if (!countError && count >= limit) {
+            return res.status(400).json({
+              success: false,
+              message: `Sorry, registrations for Sapthagiri NPS University are now full for ${event_name}. We have reached our internal quota for this event. Thank you for your interest — we hope to see you at the fest!`,
+            });
+          }
+        } catch (limitErr) {
+          console.error('Limit check error:', limitErr);
+          // Don't block registration if limit check fails
         }
       }
     }

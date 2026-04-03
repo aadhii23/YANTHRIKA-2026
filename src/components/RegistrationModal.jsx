@@ -113,7 +113,7 @@ export default function RegistrationModal({ eventName, onClose }) {
         setError(data.message || 'Registration failed. Please try again.');
       }
     } catch {
-      setError('Network error. Please try again.');
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
