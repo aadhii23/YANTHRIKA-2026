@@ -1,0 +1,159 @@
+/* ULTRA-REALISTIC HERO MODEL ENHANCEMENTS */
+
+/* Ultra model container */
+.enhanced-hero-model {
+  position: absolute !important;
+  right: 10px !important; top: 25% !important; height: 65% !important;
+  width: min(42vw, 580px) !important; 
+  aspect-ratio: 1 !important;
+  z-index: 3 !important;
+  pointer-events: none;
+  opacity: 1 !important;
+  background: transparent;
+  border-radius: 50%;
+  margin: auto;
+  /* Perfect blend - ultra-soft radial vignette */
+  -webkit-mask-image: radial-gradient(circle farthest-side, transparent 25%, rgba(0,0,0,0.15) 35%, black 50%);
+  mask-image: radial-gradient(circle farthest-side, transparent 25%, rgba(0,0,0,0.15) 35%, black 50%);
+  filter: drop-shadow(0 20px 60px rgba(0,0,0,0.6)) brightness(1.05);
+}
+
+/* Enhanced Multi-layer volumetric aura - BOOSTED */
+.enhanced-hero-model::before {
+  content: ''; position: absolute; inset: -35px;
+  background:
+    radial-gradient(circle at 55% 45%, rgba(255,60,20,0.35) 0%, transparent 55%),
+    radial-gradient(circle at 60% 50%, rgba(255,180,120,0.24) 0%, transparent 65%),
+    radial-gradient(circle at 50% 55%, rgba(255,255,255,0.12) 0%, transparent 75%),
+    radial-gradient(circle at 45% 60%, rgba(100,200,255,0.18) 0%, transparent 70%);
+  filter: blur(75px); opacity: 1;
+  animation: ultraAura 5s ease-in-out infinite alternate, ultraGlint 10s linear infinite;
+  z-index: -1;
+}
+@keyframes ultraAura { 0%{opacity:.7;transform:scale(.92);} 100%{opacity:1;transform:scale(1.08);} }
+@keyframes ultraGlint { to {transform:rotate(360deg);} }
+
+/* Enhanced God rays + volumetric beams */
+.enhanced-hero-model::after {
+  content: ''; position: absolute; inset: 0;
+  background: 
+    conic-gradient(from 200deg at 52% 48%, rgba(255,70,30,.35) 0deg, transparent 85deg, rgba(255,255,255,.18) 190deg, transparent 285deg),
+    radial-gradient(circle at 55% 40%, rgba(255,120,60,0.22) 0%, transparent 60%);
+  mix-blend-mode: screen; filter: blur(45px); opacity: 1;
+  animation: godrays 7s ease-in-out infinite alternate;
+  z-index: -1;
+}
+@keyframes godrays { 0%{opacity:.75;transform:scale(1);} 100%{opacity:1.1;transform:scale(1.04);} }
+
+/* Canvas perf */
+.enhanced-hero-model canvas { transform: translateZ(0); will-change: transform; }
+
+/* Canvas perf tweaks */
+.enhanced-hero-model canvas {
+  will-change: transform;
+  transform: translateZ(0); /* force GPU layer */
+}
+
+/* Enhanced parallax - container tilts subtly */
+.hero-model-wrap {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.12s ease-out;
+}
+
+/* Track mouse for container parallax */
+.hero:hover .hero-model-wrap {
+  transform: rotateY(var(--mouse-x, 0deg)) rotateX(var(--mouse-y, 0deg));
+}
+
+/* Enhanced Multi-layer pulsing aura - REMOVED DUPLICATE (kept first ::before) */
+
+@keyframes modelAuraOuter {
+  from { opacity: 0.55; transform: scale(0.94) rotate(0deg); }
+  to { opacity: 0.95; transform: scale(1.08) rotate(180deg); }
+}
+@keyframes modelAuraInner {
+  from { opacity: 0.7; transform: scale(0.98); }
+  to { opacity: 0.4; transform: scale(1.03); }
+}
+
+/* Responsive scaling */
+@media (max-width: 1280px) and (min-width: 1024px) {
+  .enhanced-hero-model {
+    right: 0px !important;
+    width: min(44vw, 560px) !important;
+    height: min(44vw, 560px) !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 768px) {
+  .enhanced-hero-model {
+    right: 5px !important;
+    width: min(44vw, 540px) !important;
+    height: min(44vw, 540px) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .enhanced-hero-model {
+    right: 0 !important;
+    width: 100% !important;
+    opacity: 0.88; /* slightly dimmer behind text */
+    /* Perf: reduce blur */
+    filter: blur(0.5px) brightness(0.95);
+  }
+  .enhanced-hero-model::before {
+    filter: blur(30px);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-hero-model::before,
+  .hero-model-wrap {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Large desktop (1440px+) ── */
+@media (min-width: 1440px) {
+  .enhanced-hero-model {
+    width: min(40vw, 680px) !important;
+    height: min(40vw, 680px) !important;
+    right: 2% !important;
+  }
+}
+
+/* ── Small phones (480px and below) ── */
+@media (max-width: 480px) {
+  .enhanced-hero-model {
+    width: 75vw !important;
+    height: 75vw !important;
+    top: auto !important;
+    right: auto !important;
+    position: relative !important;
+    transform: none !important;
+    margin: 0 auto;
+    opacity: 0.75;
+  }
+}
+
+/* ── iPhone / 375px ── */
+@media (max-width: 375px) {
+  .enhanced-hero-model {
+    width: 80vw !important;
+    height: 80vw !important;
+  }
+}
+
+/* ── Ultra-small (320px) ── */
+@media (max-width: 320px) {
+  .enhanced-hero-model {
+    width: 85vw !important;
+    height: 85vw !important;
+    opacity: 0.65;
+  }
+}

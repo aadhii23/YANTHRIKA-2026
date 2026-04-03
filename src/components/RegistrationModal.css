@@ -1,0 +1,318 @@
+.registration-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999999999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  padding-top: max(40px, 5vh);
+  padding-bottom: 40px;
+  will-change: opacity;
+  contain: layout style;
+  isolation: isolate;
+}
+
+.registration-modal-container {
+  background: #0d0d0d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  animation: modalEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* Let the overlay scroll, not the container */
+  overflow: visible;
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.3s;
+  z-index: 10;
+}
+
+.modal-close-btn:hover {
+  color: #fff;
+}
+
+.registration-modal-header {
+  padding: 32px 32px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.registration-modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.registration-modal-subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  font-family: var(--font-display);
+}
+
+.registration-modal-body {
+  padding: 32px;
+}
+
+/* Steps styling */
+.step-indicator {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.step-dot {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+.step-dot.active {
+  background: var(--main-color);
+  box-shadow: 0 0 10px rgba(138,43,226, 0.5);
+}
+
+/* Forms */
+.form-step-title {
+  margin-bottom: 20px;
+  color: var(--main-color);
+  font-family: var(--font-heading);
+  letter-spacing: 0.05em;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.form-group label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  color: #fff;
+  font-family: var(--font-body);
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.form-group input:focus {
+  border-color: var(--main-color);
+  background: rgba(255,255,255,0.06);
+  outline: none;
+}
+
+.error-text {
+  color: #ff4444;
+  font-size: 0.75rem;
+  margin-top: -16px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+/* Member card — fixed, no remove button */
+.member-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left: 3px solid var(--main-color);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.member-card-title {
+  margin: 0 0 14px 0;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--main-color);
+}
+.member-card .form-group input {
+  margin-bottom: 12px;
+}
+.member-card .form-group:last-child input {
+  margin-bottom: 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.btn-back {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  letter-spacing: 0.1em;
+  transition: 0.3s;
+}
+.btn-back:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.modal-success {
+  text-align: center;
+  padding: 40px 20px;
+}
+.modal-success-icon {
+  font-size: 48px;
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
+.modal-success h3 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.modal-success p {
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.event-id-box {
+  background: rgba(255,255,255,0.05);
+  border: 1px dashed var(--main-color);
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 32px;
+}
+.event-id-box span {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.event-id-box strong {
+  font-size: 2rem;
+  color: var(--main-color);
+  letter-spacing: 0.05em;
+}
+
+/* ================== RESPONSIVENESS ================== */
+@media screen and (max-width: 768px) {
+  .registration-modal-overlay {
+    padding: 16px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    align-items: flex-start;
+  }
+  .registration-modal-container {
+    max-height: none;
+  }
+  .registration-modal-header {
+    padding: 24px 24px 16px;
+  }
+  .registration-modal-title {
+    font-size: 1.25rem;
+  }
+  .registration-modal-body {
+    padding: 24px;
+  }
+  .form-group input {
+    padding: 12px 14px;
+  }
+  .btn-style-one .btn-wrap .text-one, 
+  .btn-style-one .btn-wrap .text-two {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .registration-modal-header {
+    padding: 20px 20px 12px;
+  }
+  .registration-modal-title {
+    font-size: 1.1rem;
+  }
+  .registration-modal-body {
+    padding: 20px;
+  }
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+  .btn-back, .btn-style-one {
+    width: 100%;
+    text-align: center;
+  }
+  .btn-style-one .btn-wrap {
+    justify-content: center;
+  }
+  .event-id-box strong {
+    font-size: 1.5rem;
+  }
+}
+
+/* ================================================================
+   REGISTRATION MODAL — RESPONSIVE FIXES
+   ================================================================ */
+
+/* Tablet (768px) — already covered above, adding missing bits */
+@media screen and (max-width: 560px) {
+  .registration-modal-overlay { padding: 12px; padding-top: 16px; }
+  .registration-modal-title { font-size: 1.1rem; padding-right: 32px; }
+  .member-card { padding: 12px; }
+  .member-card-title { font-size: 10px; }
+}
+
+/* iPhone / small phones (375px) */
+@media screen and (max-width: 375px) {
+  .registration-modal-overlay { padding: 8px; padding-top: 12px; }
+  .registration-modal-header { padding: 16px 16px 10px; }
+  .registration-modal-body { padding: 16px; }
+  .registration-modal-title { font-size: 1rem; }
+  .form-group input { padding: 10px 12px; font-size: 14px; }
+  .event-id-box strong { font-size: 1.3rem; letter-spacing: 2px; }
+  .modal-success h3 { font-size: 1.5rem; }
+  .modal-success { padding: 28px 12px; }
+  .step-indicator { gap: 4px; }
+}
+
+/* Ultra-small (320px) */
+@media screen and (max-width: 320px) {
+  .registration-modal-title { font-size: 0.9rem; }
+  .form-group input { padding: 9px 10px; }
+  .event-id-box { padding: 16px; }
+  .event-id-box strong { font-size: 1.1rem; }
+}
