@@ -88,6 +88,8 @@ const SNPSU_LIMITS = {
   'old roll':              5,  // Photography — 5 participants
   'frame & fame':          5,  // Vlogging — 5 teams
   'brainy bunch':         30,  // Treasure Hunt — full (30 already registered, no more)
+  'syntax wars':          12,  // Coding & Debugging — full (12 already registered, no more)
+
 };
 
 /** Returns the SNPSU limit for a given event name, or null if unlimited */
@@ -313,4 +315,4 @@ function isSnpsu(collegeName) {
     console.error('Registration handler error:', error);
     return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
-}
+
