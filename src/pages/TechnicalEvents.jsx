@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import './InnerPage.css';
 
 const EVENTS = [
-  { slug:'byte-build-sw',  name:'Byte Build (Software)', category:'Technical', subtitle:'SOFTWARE EXHIBITION', teamSize:'Team of 2–4', prize:'Exclusive Gift Hampers', img:'4.webp' },
-  { slug:'byte-build-hw',  name:'Byte Build (Hardware)', category:'Technical', subtitle:'HARDWARE EXHIBITION', teamSize:'Team of 2–4', prize:'Exclusive Gift Hampers', img:'5.webp' },
+  { slug:'byte-build-sw',  name:'Byte Build (Software)', category:'Technical', subtitle:'SOFTWARE EXHIBITION', teamSize:'Team of 2', prize:'Exclusive Gift Hampers', img:'4.webp' },
+  { slug:'byte-build-hw',  name:'Byte Build (Hardware)', category:'Technical', subtitle:'HARDWARE EXHIBITION', teamSize:'Team of 2', prize:'Exclusive Gift Hampers', img:'5.webp' },
   { slug:'syntax-wars',   name:'Syntax Wars',           category:'Technical', subtitle:'CODING & DEBUGGING',   teamSize:'Team of 2',   prize:'Exclusive Gift Hampers', img:'9.webp' },
   { slug:'verbal-wars',    name:'Verbal Wars',          category:'Technical', subtitle:'TECH DEBATE',         teamSize:'Team of 2',   prize:'Exclusive Gift Hampers', img:'7.webp' },
   { slug:'brainware',      name:'Brainware',            category:'Technical', subtitle:'IT QUIZ',             teamSize:'Team of 2',   prize:'Exclusive Gift Hampers', img:'8.webp' },
