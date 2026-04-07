@@ -7,7 +7,7 @@ const DAYS = [
   { day:1, label:'Day 1', date:'April 16, 2026', slots:[
     { time:'8:30 AM',  label:'Registrations',               type:'allotment',      venue:'Main Entrance',                        desc:'Participant check-in, team verification and badge distribution.' },
     { time:'9:00 AM',  label:'Inauguration & Keynote',       type:'ceremony',       venue:'B Block - Seminar Hall',               desc:'Grand opening, lamp lighting and chief guest address.' },
-    { time:'10:00 AM', label:'IT Quiz (Brainware)',           type:'technical',      venue:'C Block, Room 213',                    desc:'Head-to-head tech trivia — only the sharpest minds rise to the top.' },
+    { time:'10:00 AM', label:'IT Quiz (Brainware)',           type:'technical',      venue:'C Block, Room 203,205',                    desc:'Head-to-head tech trivia — only the sharpest minds rise to the top.' },
     { time:'10:00 AM', label:'IT Exhibition (ByteBuild)',     type:'workshop',       venue:'C Block - Ground Floor',               desc:'Live project demonstrations and innovative tech showcases.' },
     { time:'2:00 PM',  label:'Coding & Debugging (Syntax Wars)', type:'technical',  venue:'C Block, Room 312',                    desc:'Algorithmic challenges, live coding and rapid bug fixing.' },
     { time:'3:30 PM',  label:'IT Debate (Verbal Wars)',       type:'technical',      venue:'C Block, Rooms 303 & 305',             desc:'Clash of ideas on emerging tech and digital ethics.' },
