@@ -78,32 +78,44 @@ function whatsappLinkBlock(link) {
 /* ─────────────────────────────────────────────────────────────
    SAPTHAGIRI NPS UNIVERSITY — per-event registration limits
    Applies only to SNPSU students. Other colleges are unlimited.
+   BGMI and Free Fire are unlimited for everyone.
    ───────────────────────────────────────────────────────────── */
 const SNPSU_LIMITS = {
-  'brainware':            20,  // IT Quiz — 20 teams
-  'verbal wars':           8,  // IT Debate — 8 teams
-  'byte build (software)': 10,  // S/w Exhibition — 8 teams
-  'byte build (hardware)': 5,  // H/w Exhibition — 8 teams
-  'venture verse':        10,  // Startup Pitch — 10 teams
-  'old roll':              5,  // Photography — 5 participants
-  'frame & fame':          10,  // Vlogging — 5 teams
-  'brainy bunch':         30,  // Treasure Hunt — full (30 already registered, no more)
-  'syntax wars':          12,  // Coding & Debugging — full (12 already registered, no more)
-
+  'Brainware':              20,
+  'Verbal Wars':             8,
+  'Byte Build (Software)':  10,
+  'Byte Build (Hardware)':   5,
+  'Venture Verse':          10,
+  'Old Roll':                5,
+  'Frame & Fame':           10,
+  'Brainy Bunch':           30,
+  'Syntax Wars':            12,
 };
+
+// These events have NO limit for anyone — skip all cap checks
+const UNLIMITED_EVENTS = ['Squad Siege (BGMI)', 'Squad Siege (Free Fire)'];
 
 /** Returns the SNPSU limit for a given event name, or null if unlimited */
 function getSnpsuLimit(eventName) {
+  // Check if the event is unlimited for everyone first
+  if (UNLIMITED_EVENTS.some(e => eventName.toLowerCase().includes(e.toLowerCase()))) {
+    return null;
+  }
+  // Exact match
+  if (SNPSU_LIMITS[eventName] !== undefined) return SNPSU_LIMITS[eventName];
+  // Substring fallback
   const lower = eventName.toLowerCase();
-  const key = Object.keys(SNPSU_LIMITS).find(k => lower.includes(k));
+  const key = Object.keys(SNPSU_LIMITS).find(k => lower.includes(k.toLowerCase()));
   return key ? SNPSU_LIMITS[key] : null;
 }
 
 /** Returns true if the college name is Sapthagiri NPS University */
 function isSnpsu(collegeName) {
-  const lower = collegeName.toLowerCase().replace(/\s+/g, '');
-  return lower.includes('sapthagiri') || lower.includes('snpsu');
+  const lower = (collegeName || '').toLowerCase().replace(/[.\s]+/g, '');
+  return lower.includes('sapthagiri') || lower.includes('snpsu') || lower.includes('saptagiri');
 }
+
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -137,6 +149,8 @@ function isSnpsu(collegeName) {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // 3. Check SNPSU registration limit (if applicable)
+    //    - BGMI and Free Fire: unlimited for everyone → skip
+    //    - Other events: only SNPSU students are capped
     if (isSnpsu(college_name)) {
       const limit = getSnpsuLimit(event_name);
       if (limit !== null) {
@@ -144,7 +158,7 @@ function isSnpsu(collegeName) {
           .from('event_registrations')
           .select('*', { count: 'exact', head: true })
           .eq('event_name', event_name)
-          .or('college_name.ilike.%sapthagiri%,college_name.ilike.%snpsu%');
+          .or('college_name.ilike.%sapthagiri%,college_name.ilike.%snpsu%,college_name.ilike.%saptagiri%');
 
         if (countError) {
           console.error('Limit check error:', countError);
@@ -157,7 +171,7 @@ function isSnpsu(collegeName) {
         if (count >= limit) {
           return res.status(400).json({
             success: false,
-            message: `Sorry, registrations for Sapthagiri NPS University are now full for ${event_name}. We have reached our internal quota for this event. Thank you for your interest — we hope to see you at the fest!`,
+            message: 'Seat for SNPSU is packed, sorry. You cannot register for this event.',
           });
         }
       }
@@ -165,6 +179,7 @@ function isSnpsu(collegeName) {
 
     // 4. Insert into Supabase
     const { error: dbError } = await supabase
+      .from('event_registrations')
       .insert([{
         event_name,
         college_name,
@@ -308,11 +323,11 @@ function isSnpsu(collegeName) {
       console.warn('RESEND_API_KEY not set. Skipping email.');
     }
 
-    // 5. Respond
+    // 6. Respond
     return res.status(200).json({ success: true, event_id });
 
   } catch (error) {
     console.error('Registration handler error:', error);
     return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
-
+}

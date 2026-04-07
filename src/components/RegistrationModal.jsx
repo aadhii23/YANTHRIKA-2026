@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import './RegistrationModal.css';
+import { isSnpsu, SNPSU_FULL_MESSAGE } from '../utils/snpsuHelper';
+import { ALL_EVENTS } from '../data/events';
 
 /* ─────────────────────────────────────────────────────────────
    Fixed member count per event — no add/remove, exact count only.
@@ -32,6 +34,18 @@ function getMemberCount(eventName) {
   return key ? EVENT_MEMBER_COUNT[key] : 1;
 }
 
+/**
+ * Look up the event's SNPSU registration rule from ALL_EVENTS metadata.
+ */
+function getEventRule(eventName) {
+  const event = ALL_EVENTS.find(e => e.name === eventName);
+  if (!event) return { snpsuLimit: null, unlimitedForAll: false };
+  return {
+    snpsuLimit: event.snpsuLimit ?? null,
+    unlimitedForAll: event.unlimitedForAll ?? false,
+  };
+}
+
 export default function RegistrationModal({ eventName, onClose }) {
   const totalMembers = getMemberCount(eventName);
   // additional members = everyone except the leader
@@ -42,6 +56,7 @@ export default function RegistrationModal({ eventName, onClose }) {
   const [loading, setLoading] = useState(false);
   const [eventId, setEventId] = useState('');
   const [error, setError] = useState('');
+  const [snpsuBlocked, setSnpsuBlocked] = useState(false);
 
   const [collegeName, setCollegeName] = useState('');
   const [teamName, setTeamName] = useState('');
@@ -62,6 +77,51 @@ export default function RegistrationModal({ eventName, onClose }) {
     const updated = [...members];
     updated[idx] = { ...updated[idx], [field]: value };
     setMembers(updated);
+  };
+
+  /* ── SNPSU check: clear blocked state when college name changes ── */
+  const handleCollegeChange = (value) => {
+    setCollegeName(value);
+    if (snpsuBlocked) {
+      setSnpsuBlocked(false);
+      setError('');
+    }
+  };
+
+  /**
+   * Check SNPSU availability via the server endpoint.
+   * Returns true if registration is allowed, false if blocked.
+   */
+  const checkSnpsuAvailability = async () => {
+    const rule = getEventRule(eventName);
+
+    // Event is unlimited for everyone (BGMI, Free Fire) → skip
+    if (rule.unlimitedForAll) return true;
+
+    // Not SNPSU → always allowed
+    if (!isSnpsu(collegeName)) return true;
+
+    // No SNPSU limit defined for this event → allowed
+    if (rule.snpsuLimit === null || rule.snpsuLimit === undefined) return true;
+
+    // Hit the server to get the real count
+    try {
+      const res = await fetch('/api/check-snpsu-limit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_name: eventName, college_name: collegeName }),
+      });
+      const data = await res.json();
+      if (!data.allowed) {
+        setSnpsuBlocked(true);
+        setError(data.message || SNPSU_FULL_MESSAGE);
+        return false;
+      }
+      return true;
+    } catch {
+      // Network error — let the server-side guard handle it at submit time
+      return true;
+    }
   };
 
   const validateStep1 = () => {
@@ -88,6 +148,24 @@ export default function RegistrationModal({ eventName, onClose }) {
     return true;
   };
 
+  /**
+   * Proceed from step 1 → step 2 (team events) or directly submit (individual).
+   * Checks SNPSU availability before proceeding.
+   */
+  const handleStep1Next = async () => {
+    if (!validateStep1()) return;
+    setLoading(true);
+    const allowed = await checkSnpsuAvailability();
+    setLoading(false);
+    if (!allowed) return; // blocked — error already set
+
+    if (isTeam) {
+      setStep(2);
+    } else {
+      handleSubmit();
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validateStep2()) return;
     setLoading(true);
@@ -110,6 +188,10 @@ export default function RegistrationModal({ eventName, onClose }) {
         setEventId(data.event_id);
         setStep(3);
       } else {
+        // Server may return SNPSU-blocked error
+        if (data.message && data.message.includes('SNPSU')) {
+          setSnpsuBlocked(true);
+        }
         setError(data.message || 'Registration failed. Please try again.');
       }
     } catch {
@@ -145,7 +227,7 @@ export default function RegistrationModal({ eventName, onClose }) {
             </div>
           )}
 
-          {error && <span className="error-text">{error}</span>}
+          {error && <span className={`error-text${snpsuBlocked ? ' snpsu-blocked' : ''}`}>{error}</span>}
 
           {/* ── STEP 1: College + Leader ── */}
           {step === 1 && (
@@ -158,7 +240,7 @@ export default function RegistrationModal({ eventName, onClose }) {
                 <label>College / University Name *</label>
                 <input
                   value={collegeName}
-                  onChange={e => setCollegeName(e.target.value)}
+                  onChange={e => handleCollegeChange(e.target.value)}
                   placeholder="Enter your college name"
                 />
               </div>
@@ -189,21 +271,20 @@ export default function RegistrationModal({ eventName, onClose }) {
               </div>
 
               <div className="modal-actions" style={{ justifyContent: 'flex-end' }}>
-                {isTeam ? (
-                  <button className="btn-style-one" onClick={() => { if (validateStep1()) setStep(2); }}>
-                    <div className="btn-wrap">
-                      <span className="text-one">Team Details &rarr;</span>
-                      <span className="text-two">Team Details &rarr;</span>
-                    </div>
-                  </button>
-                ) : (
-                  <button className="btn-style-one" onClick={() => { if (validateStep1()) handleSubmit(); }} disabled={loading}>
-                    <div className="btn-wrap">
-                      <span className="text-one">{loading ? 'Submitting...' : 'Complete Registration'}</span>
-                      <span className="text-two">{loading ? 'Submitting...' : 'Complete Registration'}</span>
-                    </div>
-                  </button>
-                )}
+                <button
+                  className="btn-style-one"
+                  onClick={handleStep1Next}
+                  disabled={loading || snpsuBlocked}
+                >
+                  <div className="btn-wrap">
+                    <span className="text-one">
+                      {loading ? 'Checking...' : isTeam ? 'Team Details →' : 'Complete Registration'}
+                    </span>
+                    <span className="text-two">
+                      {loading ? 'Checking...' : isTeam ? 'Team Details →' : 'Complete Registration'}
+                    </span>
+                  </div>
+                </button>
               </div>
             </div>
           )}
@@ -251,7 +332,7 @@ export default function RegistrationModal({ eventName, onClose }) {
 
               <div className="modal-actions">
                 <button className="btn-back" onClick={() => { setError(''); setStep(1); }}>Back</button>
-                <button className="btn-style-one" onClick={handleSubmit} disabled={loading}>
+                <button className="btn-style-one" onClick={handleSubmit} disabled={loading || snpsuBlocked}>
                   <div className="btn-wrap">
                     <span className="text-one">{loading ? 'Submitting...' : 'Complete Registration'}</span>
                     <span className="text-two">{loading ? 'Submitting...' : 'Complete Registration'}</span>

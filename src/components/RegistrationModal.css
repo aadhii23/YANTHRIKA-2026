@@ -143,6 +143,16 @@
   display: block;
 }
 
+.error-text.snpsu-blocked {
+  background: rgba(255, 68, 68, 0.1);
+  border-left: 3px solid #ff4444;
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  margin-top: 0;
+  border-radius: 4px;
+  line-height: 1.5;
+}
+
 /* Member card — fixed, no remove button */
 .member-card {
   background: rgba(255,255,255,0.02);

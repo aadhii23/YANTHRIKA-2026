@@ -1,14 +1,14 @@
 export const ALL_EVENTS = [
   {
     slug: 'brainware',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeLhQLKK4xBT5AN8mTzzu_nHpcVPv10FoTGjmvryJWI5p860g/viewform',
+    snpsuLimit: 20,
     name: 'Brainware',
     category: 'Technical',
     subtitle: 'IT QUIZ',
     teamSize: 'Team of 2',
     duration: 'Day 1 -  10:00 AM',
     rounds: '3 Rounds',
-    venue: 'C Block, 2nd floor - 213',
+    venue: 'C Block, 2nd floor - 203,205',
     prize: 'Exciting Prizes',
     image: '/images/gallery/8.webp',
     description: 'Get ready to test your tech skills at Brainware! Form a team of two and battle through brain-bending questions. Only the sharpest minds will rise to the top. Bring your A-game. Ready to claim the crown?',
@@ -25,7 +25,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'byte-build-sw',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScZBE1omgmOB6s3d4cnS3zViS-vlXBF7rTthVzoibcx76RvBA/viewform',
+    snpsuLimit: 10,
     name: 'Byte Build (Software)',
     category: 'Technical',
     subtitle: 'SOFTWARE EXHIBITION',
@@ -49,7 +49,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'byte-build-hw',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeMpxCe_g5nehU34JiQXG7a1auYdMWf01zZ7mNl8SPkwB9vCA/viewform',
+    snpsuLimit: 5,
     name: 'Byte Build (Hardware)',
     category: 'Technical',
     subtitle: 'HARDWARE EXHIBITION',
@@ -73,7 +73,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'syntax-wars',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdbnfluXL_3HtJvMGqdweZBYsZDlQDdr4r364z3gSqRU8K_Yg/viewform',
+    snpsuLimit: 12,
     name: 'Syntax Wars',
     category: 'Technical',
     subtitle: 'CODING & DEBUGGING',
@@ -97,7 +97,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'verbal-wars',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdBnuAgoNqmsATLsvyGumzSOKrXFTP3R3-Lj2HA7BrSVod7GA/viewform',
+    snpsuLimit: 8,
     name: 'Verbal Wars',
     category: 'Technical',
     subtitle: 'IT DEBATE',
@@ -121,7 +121,8 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'squad-siege',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSc_ndMVmRcgs8sk7OhwUPt7F9TvJdp7qSgvNrlEasnLmsERmw/viewform',
+    snpsuLimit: null,
+    unlimitedForAll: true,
     name: 'Squad Siege (BGMI)',
     category: 'Non-Technical',
     subtitle: 'E-SPORTS -  BATTLEGROUNDS',
@@ -147,7 +148,8 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'squad-siege-fire',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSd8aeq7RzZ14fdB8zB9kUsolvNDUrbnqK2_kBS566wFIpc4wQ/viewform',
+    snpsuLimit: null,
+    unlimitedForAll: true,
     name: 'Squad Siege (Free Fire)',
     category: 'Non-Technical',
     subtitle: 'ONLINE FREE FIRE',
@@ -174,7 +176,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'old-roll',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScoZIRnrdFXxN8sY0UF3bd-CUfJJyW4UN5bR2JzVLtnODa4NQ/viewform',
+    snpsuLimit: 5,
     name: 'Old Roll',
     category: 'Non-Technical',
     subtitle: 'PHOTOGRAPHY CHALLENGE',
@@ -200,7 +202,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'vlogging',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSfGbJdOy_cqIbPcUNjE5kt1IGBg75nI4ubJl3oG07oi8Rd-pw/viewform',
+    snpsuLimit: 10,
     name: 'Frame & Fame',
     category: 'Non-Technical',
     subtitle: 'VLOGGING CHALLENGE',
@@ -226,7 +228,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'venture-verse',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScbeynRXupd1JZw3NxMnGu7oKQF77J5tMHJ9bvH-tnNIUWqUA/viewform',
+    snpsuLimit: 10,
     name: 'Venture Verse',
     category: 'Non-Technical',
     subtitle: 'STARTUP PITCH',
@@ -251,7 +253,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'brainy-bunch',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeRXCOqnJjUJUsLKaFQ3OEhjAa4s9k5t14mNWA7n8CWv00AbQ/viewform',
+    snpsuLimit: 30,
     name: 'Brainy Bunch',
     category: 'Non-Technical',
     subtitle: 'TREASURE HUNT',
@@ -278,7 +280,7 @@ export const ALL_EVENTS = [
   },
   {
     slug: 'decipher',
-    formUrl: null,
+    snpsuLimit: null,
     name: 'Decipher',
     category: 'Non-Technical',
     subtitle: 'ESCAPE ROOM',

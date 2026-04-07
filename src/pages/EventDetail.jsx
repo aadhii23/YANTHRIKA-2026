@@ -107,22 +107,16 @@ export default function EventDetail() {
                 ) : (
                   <>
                     <p>Last date to register: <strong>April 11, 2026</strong></p>
-                    {event.formUrl ? (
-                      <button
-                        className="btn-style-one"
-                        onClick={handleRegister}
-                        style={{ cursor: 'pointer', border: 'none' }}
-                      >
-                        <div className="btn-wrap">
-                          <span className="text-one">Register Now →</span>
-                          <span className="text-two">Register Now →</span>
-                        </div>
-                      </button>
-                    ) : (
-                      <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, fontFamily: 'var(--font-display)', letterSpacing: '0.08em' }}>
-                        Registration opening soon
+                    <button
+                      className="btn-style-one"
+                      onClick={handleRegister}
+                      style={{ cursor: 'pointer', border: 'none' }}
+                    >
+                      <div className="btn-wrap">
+                        <span className="text-one">Register Now →</span>
+                        <span className="text-two">Register Now →</span>
                       </div>
-                    )}
+                    </button>
                   </>
                 )}
               </div>
