@@ -5,15 +5,15 @@ import { verifyAuth } from './verify-auth.js';
    SNPSU helpers (same logic as register-event.js)
    ───────────────────────────────────────────────────────────── */
 const SNPSU_LIMITS = {
-  'Brainware':              20,
-  'Verbal Wars':             8,
-  'Byte Build (Software)':  10,
-  'Byte Build (Hardware)':   5,
-  'Venture Verse':          10,
-  'Old Roll':                5,
-  'Frame & Fame':           10,
-  'Brainy Bunch':           30,
-  'Syntax Wars':            12,
+  'Brainware': 20,
+  'Verbal Wars': 8,
+  'Byte Build (Software)': 10,
+  'Byte Build (Hardware)': 5,
+  'Venture Verse': 10,
+  'Old Roll': 5,
+  'Frame & Fame': 10,
+  'Brainy Bunch': 30,
+  'Syntax Wars': 12,
 };
 
 const UNLIMITED_EVENTS = ['Squad Siege (BGMI)', 'Squad Siege (Free Fire)'];
@@ -37,11 +37,14 @@ export default async function handler(req, res) {
   if (!verifyAuth(req)) return res.status(401).json({ error: 'Unauthorized' });
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-  const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  // Use SERVICE_ROLE_KEY if available to bypass RLS for admin actions
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
   if (!supabaseUrl || !supabaseKey) return res.status(500).json({ error: 'Missing Database Config' });
 
   const supabase = createClient(supabaseUrl, supabaseKey);
-  const { id, ...updates } = req.body;
+  
+  // Strip out id and created_at so we don't try to update read-only/generated columns
+  const { id, created_at, ...updates } = req.body;
 
   // ── SNPSU limit check when event_name or college_name is being changed ──
   const collegeName = updates.college_name;
@@ -72,6 +75,9 @@ export default async function handler(req, res) {
   }
 
   const { error } = await supabase.from('event_registrations').update(updates).eq('id', id);
-  if (error) return res.status(500).json({ error: 'Something went wrong while updating data' });
+  if (error) {
+    console.error('Supabase Update Error:', error);
+    return res.status(500).json({ error: 'Something went wrong while updating data', details: error.message });
+  }
   return res.status(200).json({ success: true });
 }

@@ -166,6 +166,22 @@ export default function AdminDashboard() {
     setEditingReg(prev => ({ ...prev, [field]: value }));
   };
 
+  const filteredData = useMemo(() => {
+    return registrations.filter(r => {
+      const matchesSearch = (r.team_name || '').toLowerCase().includes(search.toLowerCase()) || 
+                            (r.leader_name || '').toLowerCase().includes(search.toLowerCase()) ||
+                            (r.event_id || '').toLowerCase().includes(search.toLowerCase()) ||
+                            (r.college_name || '').toLowerCase().includes(search.toLowerCase());
+      const matchesFilter = filterEvent ? r.event_name === filterEvent : true;
+      return matchesSearch && matchesFilter;
+    });
+  }, [registrations, search, filterEvent]);
+
+  // Unique events for the filter dropdown
+  const eventOptions = useMemo(() => {
+    return [...new Set(registrations.map(r => r.event_name))];
+  }, [registrations]);
+
   const exportCSV = () => {
     if (!filteredData || !filteredData.length) {
       alert("No data available to export.");
@@ -173,7 +189,7 @@ export default function AdminDashboard() {
     }
     
     try {
-      const headers = Object.keys(registrations[0] || {});
+      const headers = Object.keys(filteredData[0] || {});
       if (!headers.length) return;
       
       const escapeCSV = (str) => {
@@ -215,21 +231,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const filteredData = useMemo(() => {
-    return registrations.filter(r => {
-      const matchesSearch = (r.team_name || '').toLowerCase().includes(search.toLowerCase()) || 
-                            r.leader_name.toLowerCase().includes(search.toLowerCase()) ||
-                            r.event_id.toLowerCase().includes(search.toLowerCase()) ||
-                            (r.college_name || '').toLowerCase().includes(search.toLowerCase());
-      const matchesFilter = filterEvent ? r.event_name === filterEvent : true;
-      return matchesSearch && matchesFilter;
-    });
-  }, [registrations, search, filterEvent]);
 
-  // Unique events for the filter dropdown
-  const eventOptions = useMemo(() => {
-    return [...new Set(registrations.map(r => r.event_name))];
-  }, [registrations]);
 
   if (!isAuthenticated) {
     return (

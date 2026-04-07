@@ -80,33 +80,11 @@ function whatsappLinkBlock(link) {
    Applies only to SNPSU students. Other colleges are unlimited.
    BGMI and Free Fire are unlimited for everyone.
    ───────────────────────────────────────────────────────────── */
-const SNPSU_LIMITS = {
-  'Brainware':              20,
-  'Verbal Wars':             8,
-  'Byte Build (Software)':  10,
-  'Byte Build (Hardware)':   5,
-  'Venture Verse':          10,
-  'Old Roll':                5,
-  'Frame & Fame':           10,
-  'Brainy Bunch':           30,
-  'Syntax Wars':            12,
-};
+const ALLOWED_EVENTS_FOR_SNPSU = ['squad siege (bgmi)', 'squad siege (free fire)', 'bgmi', 'free fire'];
 
-// These events have NO limit for anyone — skip all cap checks
-const UNLIMITED_EVENTS = ['Squad Siege (BGMI)', 'Squad Siege (Free Fire)'];
-
-/** Returns the SNPSU limit for a given event name, or null if unlimited */
-function getSnpsuLimit(eventName) {
-  // Check if the event is unlimited for everyone first
-  if (UNLIMITED_EVENTS.some(e => eventName.toLowerCase().includes(e.toLowerCase()))) {
-    return null;
-  }
-  // Exact match
-  if (SNPSU_LIMITS[eventName] !== undefined) return SNPSU_LIMITS[eventName];
-  // Substring fallback
-  const lower = eventName.toLowerCase();
-  const key = Object.keys(SNPSU_LIMITS).find(k => lower.includes(k.toLowerCase()));
-  return key ? SNPSU_LIMITS[key] : null;
+function isAllowedForSnpsu(eventName) {
+  const lower = (eventName || '').toLowerCase();
+  return ALLOWED_EVENTS_FOR_SNPSU.some(e => lower.includes(e));
 }
 
 /** Returns true if the college name is Sapthagiri NPS University */
@@ -150,30 +128,13 @@ export default async function handler(req, res) {
 
     // 3. Check SNPSU registration limit (if applicable)
     //    - BGMI and Free Fire: unlimited for everyone → skip
-    //    - Other events: only SNPSU students are capped
+    //    - Other events: only SNPSU students are completely blocked
     if (isSnpsu(college_name)) {
-      const limit = getSnpsuLimit(event_name);
-      if (limit !== null) {
-        const { count, error: countError } = await supabase
-          .from('event_registrations')
-          .select('*', { count: 'exact', head: true })
-          .eq('event_name', event_name)
-          .or('college_name.ilike.%sapthagiri%,college_name.ilike.%snpsu%,college_name.ilike.%saptagiri%');
-
-        if (countError) {
-          console.error('Limit check error:', countError);
-          return res.status(400).json({
-            success: false,
-            message: `Sorry, registrations for Sapthagiri NPS University are currently unavailable for ${event_name}. Please contact the organizers.`,
-          });
-        }
-
-        if (count >= limit) {
-          return res.status(400).json({
-            success: false,
-            message: 'Seat for SNPSU is packed, sorry. You cannot register for this event.',
-          });
-        }
+      if (!isAllowedForSnpsu(event_name)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Seats for Sapthagiri NPS University are packed. Sorry, SNPSU students cannot register for this event.',
+        });
       }
     }
 
