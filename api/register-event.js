@@ -82,11 +82,11 @@ function whatsappLinkBlock(link) {
 const SNPSU_LIMITS = {
   'brainware':            20,  // IT Quiz — 20 teams
   'verbal wars':           8,  // IT Debate — 8 teams
-  'byte build (software)': 8,  // S/w Exhibition — 8 teams
-  'byte build (hardware)': 8,  // H/w Exhibition — 8 teams
+  'byte build (software)': 10,  // S/w Exhibition — 8 teams
+  'byte build (hardware)': 5,  // H/w Exhibition — 8 teams
   'venture verse':        10,  // Startup Pitch — 10 teams
   'old roll':              5,  // Photography — 5 participants
-  'frame & fame':          5,  // Vlogging — 5 teams
+  'frame & fame':          10,  // Vlogging — 5 teams
   'brainy bunch':         30,  // Treasure Hunt — full (30 already registered, no more)
   'syntax wars':          12,  // Coding & Debugging — full (12 already registered, no more)
 
