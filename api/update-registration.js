@@ -9,7 +9,7 @@ const SNPSU_LIMITS = {
   'Verbal Wars': 8,
   'Byte Build (Software)': 10,
   'Byte Build (Hardware)': 5,
-  'Venture Verse': 10,
+  'Venture Verse': 15,
   'Old Roll': 5,
   'Frame & Fame': 10,
   'Brainy Bunch': 30,
