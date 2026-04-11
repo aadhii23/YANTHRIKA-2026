@@ -140,6 +140,7 @@ export default function RegisterEvent() {
   const event = ALL_EVENTS.find(e => e.slug === slug);
   const memberCount = event ? getMemberCount(event.teamSize) : 1;
   const isTeam = memberCount > 1;
+  const snpsuAllowed = event?.snpsuAllowed === true;
 
   /* ── State ── */
   const [college,   setCollege]   = useState('');
@@ -207,7 +208,7 @@ export default function RegisterEvent() {
 
   const handleCollegeChange = (value) => {
     setCollege(value);
-    if (isSnpsuCollege(value)) {
+    if (isSnpsuCollege(value) && !snpsuAllowed) {
       setSnpsuBlocked(true);
     } else {
       setSnpsuBlocked(false);
@@ -223,7 +224,7 @@ export default function RegisterEvent() {
   const validate = () => {
     const errs = {};
     if (!college.trim()) errs.college = 'College name is required';
-    if (isSnpsuCollege(college)) errs.college = 'Registrations are closed for Sapthagiri NPS University students.';
+    if (isSnpsuCollege(college) && !snpsuAllowed) errs.college = 'Registrations are closed for Sapthagiri NPS University students.';
     if (isTeam && !teamName.trim()) errs.teamName = 'Team name is required';
     validateMember(leader, 'leader', errs);
     if (memberCount >= 2) validateMember(member2, 'member2', errs);

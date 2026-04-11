@@ -44,6 +44,7 @@ export default function RegistrationModal({ eventName, onClose }) {
   // Check if this event has registrations hard-closed
   const eventData = ALL_EVENTS.find(e => e.name === eventName);
   const isHardClosed = eventData?.registrationClosed === true;
+  const snpsuAllowed = eventData?.snpsuAllowed === true;
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -120,8 +121,8 @@ export default function RegistrationModal({ eventName, onClose }) {
   const handleCollegeChange = (value) => {
     setCollegeName(value);
     
-    // Hard block: SNPSU students cannot register for any event
-    if (isSnpsuCollege(value)) {
+    // Hard block: SNPSU students cannot register unless event explicitly allows them
+    if (isSnpsuCollege(value) && !snpsuAllowed) {
       setIsBlocked(true);
       setError(`Registrations for ${eventName} are closed for Sapthagiri NPS University students. Students from other colleges can still register.`);
     } else if (eventControl.closeForAll || isHardClosed) {
@@ -169,7 +170,7 @@ export default function RegistrationModal({ eventName, onClose }) {
       return;
     }
     
-    if (isSnpsuCollege(collegeName)) {
+    if (isSnpsuCollege(collegeName) && !snpsuAllowed) {
       setError(`Registrations for ${eventName} are closed for Sapthagiri NPS University students. Students from other colleges can still register.`);
       setIsBlocked(true);
       return;
