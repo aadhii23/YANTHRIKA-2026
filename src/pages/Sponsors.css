@@ -1,0 +1,371 @@
+/* ================================================================
+   SPONSORS PAGE — 3D tilt cards, platinum/gold/silver
+   ================================================================ */
+
+.sponsors-page { padding: 80px 0 120px; }
+
+.sponsors-intro { max-width: 640px; margin-bottom: 72px; }
+.sponsors-overline {
+  font-family: var(--font-display); font-size: 10px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--main-color); display: block; margin-bottom: 12px;
+}
+.sponsors-heading {
+  font-family: var(--font-display); font-size: clamp(32px,4.5vw,58px);
+  font-weight: 800; color: #fff; line-height: 1.05em; margin-bottom: 18px;
+}
+.sponsors-heading em { font-style: normal; color: var(--main-color); }
+.sponsors-rule { width: 44px; height: 3px; background: var(--main-color); margin-bottom: 20px; }
+.sponsors-intro p { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.85; }
+
+/* ── 3D Tier grid ── */
+.tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 80px;
+  perspective: 1200px;
+}
+
+/* ── Tier card ── */
+.tier-card {
+  position: relative;
+  padding: 0;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.4s ease,
+    border-color 0.3s ease,
+    opacity 0.6s ease;
+  transform: perspective(800px) rotateY(0) rotateX(0) translateZ(0);
+  transform-style: preserve-3d;
+  will-change: transform;
+  cursor: default;
+
+  /* Entry animation */
+  opacity: 0;
+  transform: perspective(800px) translateY(30px);
+}
+.tier-card.tier-visible {
+  opacity: 1;
+  transform: perspective(800px) rotateY(0) rotateX(0) translateZ(0);
+}
+.tier-card:hover {
+  border-color: var(--tc);
+  box-shadow:
+    0 0 0 1px var(--tc),
+    0 20px 60px rgba(0,0,0,0.6),
+    0 0 40px var(--tg);
+}
+
+/* Featured (Platinum) */
+.tier-card--featured {
+  border-color: rgba(232,232,232,0.2);
+  background: linear-gradient(135deg, rgba(232,232,232,0.04) 0%, rgba(0,0,0,0) 100%);
+}
+.tier-card--featured .tier-card__top-line {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--tc), transparent);
+}
+.tier-card__crown {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: linear-gradient(90deg, transparent, rgba(232,232,232,0.12), transparent);
+  font-family: var(--font-display); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--tc); text-align: center; padding: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Top accent line */
+.tier-card__top-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tc), transparent);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+.tier-card:hover .tier-card__top-line { opacity: 1; }
+
+/* Header */
+.tier-card__head {
+  padding: 28px 28px 20px;
+}
+.tier-card--featured .tier-card__head { padding-top: 44px; }
+.tier-card__badge {
+  display: inline-flex; align-items: center;
+  padding: 4px 14px; margin-bottom: 14px;
+  border: 1px solid var(--tc);
+  background: color-mix(in srgb, var(--tc) 10%, transparent);
+}
+.tier-card__badge-text {
+  font-family: var(--font-display); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--tc);
+}
+.tier-card__amount {
+  font-family: var(--font-heading); font-size: 42px; color: #fff; line-height: 1em;
+  margin-bottom: 6px;
+}
+.tier-card__slots {
+  font-family: var(--font-display); font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(255,255,255,0.3);
+}
+
+/* Perks list */
+.tier-card__perks {
+  padding: 0 28px; margin-bottom: 28px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 20px; list-style: none;
+}
+.tier-card__perks li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; color: rgba(255,255,255,0.55);
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  line-height: 1.5;
+}
+.tier-card__perks li:last-child { border-bottom: none; }
+.tier-card__check {
+  color: var(--tc); font-weight: 700; flex-shrink: 0;
+  font-size: 12px; margin-top: 1px;
+}
+
+/* CTA button */
+.tier-card__cta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 0 28px 28px;
+  padding: 13px 18px;
+  background: color-mix(in srgb, var(--tc) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tc) 30%, transparent);
+  font-family: var(--font-display); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--tc);
+  transition: background 0.25s ease, padding-right 0.25s ease;
+}
+.tier-card__cta:hover {
+  background: color-mix(in srgb, var(--tc) 20%, transparent);
+  padding-right: 22px;
+}
+.tier-card__cta-arrow { transition: transform 0.25s ease; }
+.tier-card__cta:hover .tier-card__cta-arrow { transform: translateX(4px); }
+
+/* 3D shine overlay */
+.tier-card__shine {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.04) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(255,255,255,0.02) 100%
+  );
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.tier-card:hover .tier-card__shine { opacity: 1; }
+
+/* Current sponsors */
+.sponsors-current {
+  margin-bottom: 80px;
+}
+.sponsors-current__hdr {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.sponsors-current__label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--main-color);
+  white-space: nowrap;
+}
+.sponsors-current__line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba(255,30,30,0.3), transparent);
+}
+
+/* Logos grid */
+.sponsors-logos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+}
+
+/* Individual sponsor card */
+.sponsor-logo-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 40px 28px;
+  width: 280px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+
+  opacity: 0;
+  transform: translateY(24px);
+  animation: sponsorFadeIn 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+  animation-delay: calc(var(--i, 0) * 0.15s + 0.2s);
+  transition: border-color 0.3s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+
+@keyframes sponsorFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sponsor-logo-card:hover {
+  border-color: rgba(255,30,30,0.4);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,30,30,0.15);
+  transform: translateY(-8px);
+}
+
+.sponsor-logo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--main-color), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.sponsor-logo-card:hover::before { opacity: 1; }
+
+/* Logo image wrapper */
+.sponsor-logo-card__img-wrap {
+  width: 100%;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: grayscale(100%) brightness(0.7);
+  transition: filter 0.4s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.sponsor-logo-card:hover .sponsor-logo-card__img-wrap {
+  filter: grayscale(0%) brightness(1.05);
+  transform: scale(1.05);
+}
+.sponsor-logo-card__img-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Sponsor name */
+.sponsor-logo-card__name {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  transition: color 0.3s ease;
+}
+.sponsor-logo-card:hover .sponsor-logo-card__name {
+  color: rgba(255,255,255,0.65);
+}
+
+/* Shine sweep */
+.sponsor-logo-card__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.05) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.55s ease;
+  pointer-events: none;
+}
+.sponsor-logo-card:hover .sponsor-logo-card__shine {
+  transform: translateX(100%);
+}
+
+@media (max-width: 600px) {
+  .sponsor-logo-card { width: 100%; }
+  .sponsor-logo-card:hover { transform: none; }
+}
+
+/* Bottom CTA */
+.sponsors-cta {
+
+  text-align: center; padding: 72px 48px;
+  background: linear-gradient(135deg, #0d0d0d, #1a0000);
+  border: 1px solid rgba(255,30,30,0.15);
+}
+.sponsors-cta h2 {
+  font-family: var(--font-heading); font-size: clamp(36px,5vw,68px);
+  color: #fff; margin-bottom: 12px;
+}
+.sponsors-cta p { font-size: 15px; color: rgba(255,255,255,0.45); margin-bottom: 36px; }
+.sponsors-cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .tiers-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .sponsors-slots { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 600px) {
+  .sponsors-slots { grid-template-columns: 1fr; }
+}
+
+/* ── Mobile sponsor polish ── */
+@media (max-width: 480px) {
+  .sponsors-page { padding: 60px 0 80px; }
+  .sponsors-intro { margin-bottom: 48px; }
+  .tiers-grid { max-width: 100%; gap: 16px; }
+  .tier-card__head { padding: 20px 18px 14px; }
+  .tier-card__perks { padding: 0 18px 0; padding-top: 14px; margin-bottom: 18px; }
+  .tier-card__cta { margin: 0 18px 18px; }
+  .tier-card__amount { font-size: 32px; }
+  .sponsors-cta { padding: 48px 20px; }
+  .sponsors-cta-btns { flex-direction: column; align-items: stretch; }
+  .sponsors-cta-btns a { width: 100%; justify-content: center; }
+}
+
+/* ================================================================
+   SPONSORS — RESPONSIVE FIXES
+   ================================================================ */
+
+/* Tablet (768px) */
+@media (max-width: 768px) {
+  .sponsors-page { padding: 60px 0 80px; }
+  .sponsors-intro { margin-bottom: 48px; }
+  .tiers-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto 60px; }
+  .sponsors-cta { padding: 48px 24px; }
+}
+
+/* Large desktop (1440px+) */
+@media (min-width: 1440px) {
+  .tiers-grid { grid-template-columns: repeat(3, 1fr); max-width: 1100px; }
+  .sponsors-logos-grid { max-width: 900px; margin: 0 auto; }
+}
+
+/* iPhone / small phones (375px) */
+@media (max-width: 375px) {
+  .sponsors-heading { font-size: 28px; }
+  .tier-card__amount { font-size: 28px; }
+  .tier-card__head { padding: 16px 16px 12px; }
+  .tier-card__perks { padding: 0 16px; padding-top: 12px; }
+  .tier-card__cta { margin: 0 16px 16px; padding: 11px 14px; font-size: 11px; }
+  .sponsor-logo-card { padding: 28px 20px 20px; }
+  .sponsor-logo-card__img-wrap { height: 80px; }
+  .sponsors-cta h2 { font-size: 28px; }
+  .sponsors-cta-btns { flex-direction: column; }
+}
+
+/* Ultra-small (320px) */
+@media (max-width: 320px) {
+  .tier-card__amount { font-size: 24px; }
+  .sponsors-cta { padding: 36px 14px; }
+}
