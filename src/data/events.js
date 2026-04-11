@@ -75,6 +75,7 @@ export const ALL_EVENTS = [
     name: 'Syntax Wars',
     category: 'Technical',
     subtitle: 'CODING & DEBUGGING',
+    registrationClosed: true,
     teamSize: 'Team of 2',
     duration: 'Day 1 -  2:00 PM',
     rounds: '1 Round',
