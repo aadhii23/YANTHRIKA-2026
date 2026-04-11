@@ -1023,6 +1023,31 @@ p { color: rgba(255,255,255,0.52); font-size: 15px; line-height: 1.85em; margin-
 }
 .ev-card:hover .ev-card__line { transform: scaleX(1); }
 
+/* ── Closed badge on home event cards ── */
+.ev-card__closed-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(220, 38, 38, 0.92);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  backdrop-filter: blur(4px);
+  z-index: 3;
+}
+
+.ev-card--closed .ev-card__img img {
+  filter: brightness(0.38) contrast(1.1) grayscale(30%);
+}
+
+.ev-card--closed:hover .ev-card__img img {
+  filter: brightness(0.45) contrast(1.1) grayscale(20%);
+}
+
 .events-foot { margin-top: 52px; text-align: center; }
 
 /* ══════════════════════════════════════════

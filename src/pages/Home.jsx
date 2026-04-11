@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import HeroModel from '../components/HeroModel';
 import './Home.css';
+import { ALL_EVENTS } from '../data/events';
 
 const STATS = [
   { value: 12,  suffix: '',   label: 'Events',               icon: '' },
@@ -10,19 +11,37 @@ const STATS = [
   { value: 700, suffix: '+',  label: 'Participants',          icon: '' },
 ];
 
-const EVENTS = [
-  { slug:'squad-siege',      name:'Squad Siege (BGMI)',       tag:'E-SPORTS',            prize:'Exclusive Gift Hampers', img:'1.webp' },
-  { slug:'old-roll',         name:'Old Roll',                 tag:'PHOTOGRAPHY',         prize:'Exclusive Gift Hampers', img:'2.webp' },
-  { slug:'vlogging',         name:'Frame & Fame',             tag:'VLOGGING',            prize:'Exclusive Gift Hampers', img:'3.webp' },
-  { slug:'byte-build-sw',    name:'ByteBuild (Software)',     tag:'SOFTWARE EXHIBITION', prize:'Exclusive Gift Hampers', img:'4.webp' },
-  { slug:'byte-build-hw',    name:'ByteBuild (Hardware)',     tag:'HARDWARE EXHIBITION', prize:'Exclusive Gift Hampers', img:'5.webp' },
-  { slug:'venture-verse',    name:'Venture Verse',            tag:'STARTUP PITCH',       prize:'Exclusive Gift Hampers', img:'6.webp' },
-  { slug:'squad-siege-fire', name:'Squad Siege (Free Fire)',  tag:'E-SPORTS (FREE FIRE)',prize:'Exclusive Gift Hampers', img:'7.webp' },
-  { slug:'verbal-wars',      name:'Verbal Wars',              tag:'IT DEBATE',           prize:'Exclusive Gift Hampers', img:'8.webp' },
-  { slug:'syntax-wars',      name:'Syntax Wars',              tag:'CODING & DEBUGGING',  prize:'Exclusive Gift Hampers', img:'9.webp' },
-  { slug:'brainware',        name:'BrainWare',                tag:'IT QUIZ',             prize:'Exclusive Gift Hampers', img:'8.webp' },
-  { slug:'brainy-bunch',     name:'Brainy Bunch',             tag:'TREASURE HUNT',       prize:'Exclusive Gift Hampers', img:'2.webp' },
+const HOME_EVENT_SLUGS = [
+  'squad-siege', 'old-roll', 'vlogging', 'byte-build-sw', 'byte-build-hw',
+  'venture-verse', 'squad-siege-fire', 'verbal-wars', 'syntax-wars', 'brainware', 'brainy-bunch',
 ];
+
+const HOME_EVENT_META = {
+  'squad-siege':      { tag: 'E-SPORTS',            img: '1.webp' },
+  'old-roll':         { tag: 'PHOTOGRAPHY',         img: '2.webp' },
+  'vlogging':         { tag: 'VLOGGING',            img: '3.webp' },
+  'byte-build-sw':    { tag: 'SOFTWARE EXHIBITION', img: '4.webp' },
+  'byte-build-hw':    { tag: 'HARDWARE EXHIBITION', img: '5.webp' },
+  'venture-verse':    { tag: 'STARTUP PITCH',       img: '6.webp' },
+  'squad-siege-fire': { tag: 'E-SPORTS (FREE FIRE)', img: '7.webp' },
+  'verbal-wars':      { tag: 'IT DEBATE',           img: '8.webp' },
+  'syntax-wars':      { tag: 'CODING & DEBUGGING',  img: '9.webp' },
+  'brainware':        { tag: 'IT QUIZ',             img: '8.webp' },
+  'brainy-bunch':     { tag: 'TREASURE HUNT',       img: '2.webp' },
+};
+
+const EVENTS = HOME_EVENT_SLUGS.map(slug => {
+  const ev = ALL_EVENTS.find(e => e.slug === slug);
+  const meta = HOME_EVENT_META[slug];
+  return {
+    slug,
+    name: ev?.name || slug,
+    tag: meta?.tag || '',
+    prize: 'Exclusive Gift Hampers',
+    img: meta?.img || '1.webp',
+    registrationClosed: ev?.registrationClosed || false,
+  };
+});
 
 const MARQUEE = [
   'BRAINWARE','SYNTAX WARS','VERBAL WARS','BYTEBUILD',
@@ -404,10 +423,13 @@ export default function Home() {
           <div className="ev-grid">
             {EVENTS.map((ev, i) => (
               <Link key={ev.slug} to={`/events/${ev.slug}`}
-                className={`ev-card reveal${i === 0 ? ' ev-card--big' : ''}`} data-delay={i * 55}>
+                className={`ev-card reveal${i === 0 ? ' ev-card--big' : ''}${ev.registrationClosed ? ' ev-card--closed' : ''}`} data-delay={i * 55}>
                 <div className="ev-card__img">
                   <img src={`/images/gallery/${ev.img}`} alt={ev.name} loading="lazy" />
                   <div className="ev-card__shade" />
+                  {ev.registrationClosed && (
+                    <span className="ev-card__closed-badge">Registrations Closed</span>
+                  )}
                 </div>
                 <div className="ev-card__info">
                   <span className="ev-card__tag">{ev.tag}</span>
