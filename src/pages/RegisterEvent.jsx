@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import './InnerPage.css';
 import { ALL_EVENTS } from '../data/events';
 import { isSnpsuCollege } from '../utils/snpsuDetector';
+import { shouldEventBeClosed } from '../utils/registrationLimits';
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLQaVq2hlf_l-wsivMU26Tm6R3ToHlMCO7vYLvW3mA1tcPBscBtm8JIHOWJqRdUKK_/exec';
 
@@ -153,8 +154,14 @@ export default function RegisterEvent() {
   const [submitted, setSubmitted] = useState(false);
   const [loading,   setLoading]   = useState(false);
   const [snpsuBlocked, setSnpsuBlocked] = useState(false);
+  const [capacityReached, setCapacityReached] = useState(false);
 
   useEffect(() => { window.scrollTo(0, 0); }, [slug]);
+
+  // Check registration limit on mount
+  useEffect(() => {
+    checkRegistrationLimit();
+  }, [slug]);
 
   if (!event) return (
     <div style={{ padding:'200px 0', textAlign:'center' }}>
@@ -202,6 +209,43 @@ export default function RegisterEvent() {
     );
   }
 
+  // Capacity reached — show closed screen
+  if (capacityReached) {
+    const backPath = event.category === 'Technical' ? '/events/technical' : '/events/non-technical';
+    return (
+      <div className="page-wrapper">
+        <div className="page-title" style={{ backgroundImage: `url(${event.image})` }}>
+          <div className="auto-container">
+            <h2 className="page-title_heading">Register — <span>{event.name}</span></h2>
+            <div className="breadcrumb-nav">
+              <Link to="/">Home</Link><span className="sep">/</span>
+              <Link to={backPath}>Events</Link><span className="sep">/</span>
+              {event.name}
+            </div>
+          </div>
+        </div>
+        <section style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
+          <div className="reg-success-box" style={{ opacity: 1, transform: 'none', textAlign: 'center' }}>
+            <div className="reg-success-icon" style={{ background: 'rgba(255,60,60,0.15)', color: '#ff4444' }}>🔒</div>
+            <h2 className="reg-success-title">Registrations Closed</h2>
+            <p className="reg-success-sub">
+              Registrations for <strong>{event.name}</strong> are now closed.
+            </p>
+            <p className="reg-success-note">Thank you for your interest! Stay tuned for future events.</p>
+            <div className="reg-success-actions">
+              <Link to={`/events/${event.slug}`} className="btn-style-two">
+                <div className="btn-wrap"><span className="text-one">Back to Event</span><span className="text-two">Back to Event</span></div>
+              </Link>
+              <Link to={backPath} className="btn-style-one">
+                <div className="btn-wrap"><span className="text-one">All Events</span><span className="text-two">All Events</span></div>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   /* ── Validation ── */
   const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phoneRx = /^\+?[\d\s\-]{10,}$/;
@@ -212,6 +256,36 @@ export default function RegisterEvent() {
       setSnpsuBlocked(true);
     } else {
       setSnpsuBlocked(false);
+    }
+  };
+
+  const checkRegistrationLimit = async () => {
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
+      if (!supabaseUrl || !supabaseKey) return;
+
+      // Count registrations for this event
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/registrations?event_name=eq.${encodeURIComponent(event?.name)}&select=count()`,
+        {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Prefer': 'count=exact'
+          }
+        }
+      );
+
+      if (res.ok) {
+        const count = parseInt(res.headers.get('content-range')?.split('/')[1] || '0', 10);
+        if (shouldEventBeClosed(event?.name, count)) {
+          setCapacityReached(true);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to check registration limit:', err);
     }
   };
 

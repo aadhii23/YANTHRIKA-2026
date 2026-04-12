@@ -4,14 +4,51 @@ import './InnerPage.css';
 import { ALL_EVENTS } from '../data/events';
 import RegistrationModal from '../components/RegistrationModal';
 import '../components/RegistrationModal.css';
+import { shouldEventBeClosed } from '../utils/registrationLimits';
 
 export default function EventDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const event = ALL_EVENTS.find(e => e.slug === slug);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [capacityReached, setCapacityReached] = useState(false);
 
   useEffect(() => { window.scrollTo(0, 0); }, [slug]);
+
+  // Check registration limit on mount
+  useEffect(() => {
+    checkRegistrationLimit();
+  }, [slug]);
+
+  const checkRegistrationLimit = async () => {
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
+      if (!supabaseUrl || !supabaseKey) return;
+
+      // Count registrations for this event
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/registrations?event_name=eq.${encodeURIComponent(event?.name)}&select=count()`,
+        {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Prefer': 'count=exact'
+          }
+        }
+      );
+
+      if (res.ok) {
+        const count = parseInt(res.headers.get('content-range')?.split('/')[1] || '0', 10);
+        if (shouldEventBeClosed(event?.name, count)) {
+          setCapacityReached(true);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to check registration limit:', err);
+    }
+  };
 
   if (!event) return (
     <div style={{ padding: '200px 0', textAlign: 'center' }}>
@@ -107,7 +144,7 @@ export default function EventDetail() {
                       </div>
                     </a>
                   </div>
-                ) : event.registrationClosed ? (
+                ) : event.registrationClosed || capacityReached ? (
                   <div className="reg-closed-box">
                     <div className="reg-closed-icon">🔒</div>
                     <h4>Registrations Closed</h4>

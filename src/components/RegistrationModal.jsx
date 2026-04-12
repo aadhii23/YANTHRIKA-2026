@@ -4,6 +4,7 @@ import './RegistrationModal.css';
 import { ALL_EVENTS } from '../data/events';
 import { normalizeCollegeName, COMMON_COLLEGES } from '../utils/collegeNormalizer';
 import { isSnpsuCollege, getClosureMessage } from '../utils/snpsuDetector';
+import { shouldEventBeClosed } from '../utils/registrationLimits';
 
 /* ─────────────────────────────────────────────────────────────
    Fixed member count per event — no add/remove, exact count only.
@@ -106,8 +107,42 @@ export default function RegistrationModal({ eventName, onClose }) {
           }
         }
       }
+
+      // Also check registration limit
+      checkRegistrationLimit();
     } catch (err) {
       console.error('Failed to fetch event control:', err);
+    }
+  };
+
+  const checkRegistrationLimit = async () => {
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
+      if (!supabaseUrl || !supabaseKey) return;
+
+      // Count registrations for this event
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/registrations?event_name=eq.${encodeURIComponent(eventName)}&select=count()`,
+        {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Prefer': 'count=exact'
+          }
+        }
+      );
+
+      if (res.ok) {
+        const count = parseInt(res.headers.get('content-range')?.split('/')[1] || '0', 10);
+        if (shouldEventBeClosed(eventName, count)) {
+          setIsBlocked(true);
+          setError(`Registrations for ${eventName} have reached capacity and are now closed.`);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to check registration limit:', err);
     }
   };
 
