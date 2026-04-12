@@ -254,7 +254,7 @@ export const ALL_EVENTS = [
     name: 'Brainy Bunch',
     category: 'Non-Technical',
     subtitle: 'TREASURE HUNT',
-    snpsuAllowed: true,
+    registrationClosed: true,
     teamSize: 'Team of 4',
     duration: 'Day 1 -  10:00 AM',
     rounds: 'Multi-stage Hunt',
