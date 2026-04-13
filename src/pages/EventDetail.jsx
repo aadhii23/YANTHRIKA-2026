@@ -146,7 +146,6 @@ export default function EventDetail() {
                   </div>
                 ) : event.registrationClosed || capacityReached ? (
                   <div className="reg-closed-box">
-                    <div className="reg-closed-icon">🔒</div>
                     <h4>Registrations Closed</h4>
                     <p>Registrations for <strong>{event.name}</strong> are now closed. Thank you for your interest!</p>
                   </div>

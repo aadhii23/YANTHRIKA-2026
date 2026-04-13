@@ -189,7 +189,6 @@ export default function RegisterEvent() {
         </div>
         <section style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
           <div className="reg-success-box" style={{ opacity: 1, transform: 'none', textAlign: 'center' }}>
-            <div className="reg-success-icon" style={{ background: 'rgba(255,60,60,0.15)', color: '#ff4444' }}>🔒</div>
             <h2 className="reg-success-title">Registrations Closed</h2>
             <p className="reg-success-sub">
               Registrations for <strong>{event.name}</strong> are now closed.
@@ -226,7 +225,6 @@ export default function RegisterEvent() {
         </div>
         <section style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
           <div className="reg-success-box" style={{ opacity: 1, transform: 'none', textAlign: 'center' }}>
-            <div className="reg-success-icon" style={{ background: 'rgba(255,60,60,0.15)', color: '#ff4444' }}>🔒</div>
             <h2 className="reg-success-title">Registrations Closed</h2>
             <p className="reg-success-sub">
               Registrations for <strong>{event.name}</strong> are now closed.
