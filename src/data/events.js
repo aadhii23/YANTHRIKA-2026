@@ -151,7 +151,7 @@ export const ALL_EVENTS = [
     name: 'Squad Siege (Free Fire)',
     category: 'Non-Technical',
     subtitle: 'ONLINE FREE FIRE',
-    registrationClosed: true,
+    snpsuAllowed: true,
     teamSize: 'Squad of 4',
     duration: 'Day 2 -  5:00 PM',
     rounds: 'League + Knockout',
