@@ -152,6 +152,8 @@ export const ALL_EVENTS = [
     category: 'Non-Technical',
     subtitle: 'ONLINE FREE FIRE',
     snpsuAllowed: true,
+    registrationLimit: 50,
+    showRemainingSlots: true,
     teamSize: 'Squad of 4',
     duration: 'Day 2 -  5:00 PM',
     rounds: 'League + Knockout',

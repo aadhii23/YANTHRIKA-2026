@@ -49,6 +49,9 @@ export default function TechnicalEvents() {
                   {e.registrationClosed && (
                     <span className="event-card-closed-badge">Registrations Closed</span>
                   )}
+                  {e.showRemainingSlots && !e.registrationClosed && (
+                    <span className="event-card-slots-badge">Only 9 More Slots</span>
+                  )}
                 </div>
                 <div className="event-card-body">
                   <div className="event-card-sub">{e.subtitle}</div>

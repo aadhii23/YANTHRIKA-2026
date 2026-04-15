@@ -2178,6 +2178,36 @@ input.err, textarea.err {
   backdrop-filter: blur(4px);
 }
 
+/* ── Remaining slots badge on event cards ── */
+.event-card-slots-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff1e1e 100%);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 3px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 20px rgba(255, 30, 30, 0.6);
+  animation: slotsPulse 2s ease-in-out infinite;
+}
+
+@keyframes slotsPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 30, 30, 0.6);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 30, 30, 0.9);
+    transform: scale(1.05);
+  }
+}
+
 .event-card--closed {
   opacity: 0.75;
 }

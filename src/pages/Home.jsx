@@ -430,6 +430,9 @@ export default function Home() {
                   {ev.registrationClosed && (
                     <span className="ev-card__closed-badge">Registrations Closed</span>
                   )}
+                  {ev.showRemainingSlots && !ev.registrationClosed && (
+                    <span className="ev-card__slots-badge">Only 9 More Slots</span>
+                  )}
                 </div>
                 <div className="ev-card__info">
                   <span className="ev-card__tag">{ev.tag}</span>
